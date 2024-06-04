@@ -58,11 +58,18 @@ def one_way_anova():
 
     st.title("ANOVA Analysis")
 
-    uploaded_file = st.file_uploader("Upload CSV file", type=["csv"])
+    uploaded_file = st.file_uploader("Upload CSV or XLSX file", type=["csv", "xlsx"])
     if uploaded_file is not None:
-        df = pd.read_csv(uploaded_file)
+        if uploaded_file.name.endswith('.csv'):
+            df = pd.read_csv(uploaded_file)
+        elif uploaded_file.name.endswith('.xlsx'):
+            df = pd.read_excel(uploaded_file)
+        else:
+            st.write("Invalid file format. Please upload a CSV or XLSX file.")
+            return
         st.write("Uploaded DataFrame:")
-        st.data_editor(df.head())
+        st.dataframe(df.head())
+
 
         group_column = st.selectbox("Select grouping column:", df.columns)
         value_column = st.selectbox("Select value column:", df.columns)
